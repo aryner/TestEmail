@@ -44,6 +44,7 @@ public class GMail {
     List<String> toEmailList;
     String emailSubject;
     String emailBody;
+    String path;
     Multipart multipart;
 
     Properties emailProperties;
@@ -53,13 +54,14 @@ public class GMail {
     public GMail() {
     }
 
-    public GMail(String fromEmail, String fromPassword, List toEmailList, String emailSubject, String emailBody, Context context) {
+    public GMail(String fromEmail, String fromPassword, List toEmailList, String emailSubject, String emailBody, Context context, String path) {
         this.fromEmail = fromEmail;
         this.fromPassword = fromPassword;
         this.toEmailList = toEmailList;
         this.emailSubject = emailSubject;
         this.emailBody = emailBody;
         this.context = context;
+        this.path = path;
 
         emailProperties = System.getProperties();
         emailProperties.put("mail.smtp.port",emailPort);
@@ -69,7 +71,6 @@ public class GMail {
     }
 
     public MimeMessage createEmailMessage() throws AddressException, MessagingException, UnsupportedEncodingException {
-        System.out.println("in createEmailMessage");
         multipart = new MimeMultipart();
         mailSession = Session.getDefaultInstance(emailProperties, null);
         emailMessage = new MimeMessage(mailSession);
@@ -83,9 +84,12 @@ public class GMail {
         emailMessage.setSubject(emailSubject);
         //for testing only
         String fileName = "testFile";
-        createFile(fileName);
+//        createFile(fileName);
         try {
-            addAttachment(context.getFilesDir()+"/"+fileName);
+//old working attachment
+//            addAttachment(context.getFilesDir()+"/"+fileName);
+            System.out.println("path = "+path);
+            addAttachment(path);
         } catch (Exception e) {e.printStackTrace();}
         //end of testing only part
 
@@ -109,7 +113,6 @@ public class GMail {
     }
 
     public void addAttachment(String fileName) throws Exception {
-        System.out.println(fileName);
         BodyPart messageBodyPart = new MimeBodyPart();
         javax.activation.DataSource source = new FileDataSource(fileName);
         messageBodyPart.setDataHandler(new DataHandler(source));
@@ -120,7 +123,6 @@ public class GMail {
 
         if(matcher.find()) {
             messageBodyPart.setFileName(matcher.group());
-            System.out.println("********* matacher = " + matcher.group());
             fileName = matcher.group();
         }
         else {
@@ -128,7 +130,6 @@ public class GMail {
         }
 
         multipart.addBodyPart(messageBodyPart);
-        System.out.println("attachment added");
 
         //For testing only
         byte [] buffer = new byte[1024];
@@ -138,7 +139,6 @@ public class GMail {
         while((length = fileInputStream.read(buffer)) != -1 && buffer.length>0) {
             fileCountent.append(new String(buffer));
         }
-        System.out.println(fileCountent.toString());
     }
 
     private void createFile(String fileName) {
@@ -149,14 +149,11 @@ public class GMail {
             outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
             outputStream.write("test content".getBytes());
             outputStream.close();
-            System.out.println("file created?");
         } catch (Exception e) {e.printStackTrace();}
 
         //for testing only
         String [] files = context.fileList();
-        System.out.println("files:");
         for(int i=0; i<files.length; i++)  {
-            System.out.println("file"+(i+1)+": "+files[i]);
         }
     }
 }
