@@ -43,19 +43,6 @@ public class MyActivity extends Activity implements RegEmail.RegEmailListener{
 
         final Button send = (Button)findViewById(R.id.button);
         final Button picture = (Button)findViewById(R.id.pictureButton);
-        /*
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-//                    new MailService().sendEmail();
-                    new AsyncEmail().execute("");
-                } catch (Exception e) { e.printStackTrace(); }
-            }
-        });
-                */
-
- //               /*
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,27 +63,9 @@ public class MyActivity extends Activity implements RegEmail.RegEmailListener{
         picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //for full size images?
                 dispatchTakePictureIntent();
-                //end of full size images
-                /*
-//working for thumbnails
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, 0);
-//end of working for thumbnails
-                */
             }
         });
-//        */
-        /*
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RegEmail email = new RegEmail();
-                email.show(getFragmentManager(), "email");
-            }
-        });
-        */
     }
 
     private void dispatchTakePictureIntent() {
@@ -130,42 +99,14 @@ public class MyActivity extends Activity implements RegEmail.RegEmailListener{
         map.compress(Bitmap.CompressFormat.PNG, 100, stream);
         image.setImageBitmap(map);
         layout.addView(image);
-//        if(data.getExtras() != null) {
-//hopefully send full image
-//end of send full image
-
-//already works
-/*
-//sends thumbnail or stretched thumbnail
-            Bitmap map = (Bitmap) data.getExtras().get("data");
-
-            map = Bitmap.createScaledBitmap(map, 600, 970, true);
-
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            map.compress(Bitmap.CompressFormat.PNG, 0, stream);
-            byte [] byteArray = stream.toByteArray();
-
-            try {
-                FileOutputStream fileOut = openFileOutput("testFile", MODE_WORLD_READABLE);
-                fileOut.write(byteArray);
-                fileOut.close();
-            } catch (Exception e) { e.printStackTrace(); }
-//end of sends thumbnail
-*/
- //       }
     }
 
     //for full size images?
     private File createImageFile(String fileName) throws IOException {
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-//        File storageDir = getExternalFilesDir();
         File image = File.createTempFile(fileName, "", storageDir);
-//        File storageDir = new File(getFilesDir()+"/temp");
-//        storageDir.mkdirs();
-//        File image = File.createTempFile(fileName, "", storageDir);
 
-        mCurrentPhotoPath = "file:"+image.getAbsolutePath();//.substring(1,image.getAbsolutePath().indexOf("-"));
-        mCurrentPhotoPath = image.getAbsolutePath();//.substring(1,image.getAbsolutePath().indexOf("-"));
+        mCurrentPhotoPath = image.getAbsolutePath();
         System.out.println(mCurrentPhotoPath);
         return image;
     }

@@ -1,11 +1,8 @@
 package com.example.aryner.testemail;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -26,7 +23,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.sql.DataSource;
 
 /**
  * Created by aryner on 12/1/14.
@@ -54,6 +50,8 @@ public class GMail {
     public GMail() {
     }
 
+    //the path parameter would normally not be here but for the
+    // sample/example case it made things easier
     public GMail(String fromEmail, String fromPassword, List toEmailList, String emailSubject, String emailBody, Context context, String path) {
         this.fromEmail = fromEmail;
         this.fromPassword = fromPassword;
@@ -82,22 +80,16 @@ public class GMail {
         }
 
         emailMessage.setSubject(emailSubject);
-        //for testing only
-        String fileName = "testFile";
-//        createFile(fileName);
         try {
-//old working attachment
-//            addAttachment(context.getFilesDir()+"/"+fileName);
             System.out.println("path = "+path);
             addAttachment(path);
         } catch (Exception e) {e.printStackTrace();}
-        //end of testing only part
 
         MimeBodyPart messagePart = new MimeBodyPart();
         messagePart.setText(emailBody);
 
         multipart.addBodyPart(messagePart);
-        emailMessage.setContent(multipart);
+        emailMessage.setContent(multipart); //for email with attachment
 //        emailMessage.setContent(emailBody, "text/html"); // for html email
 //        emailMessage.setContent(emailBody); // for a text email
         return emailMessage;
@@ -130,19 +122,9 @@ public class GMail {
         }
 
         multipart.addBodyPart(messageBodyPart);
-
-        //For testing only
-        byte [] buffer = new byte[1024];
-        int length;
-        StringBuffer fileCountent = new StringBuffer("");
-        FileInputStream fileInputStream = context.openFileInput(fileName);
-        while((length = fileInputStream.read(buffer)) != -1 && buffer.length>0) {
-            fileCountent.append(new String(buffer));
-        }
     }
 
     private void createFile(String fileName) {
-//        File file = new File(context.getFilesDir(), fileName);
         FileOutputStream outputStream;
 
         try {

@@ -30,18 +30,14 @@ public class SendMailTask extends AsyncTask{
     @Override
     protected  Object doInBackground(Object... args) {
         try {
-//            publishProgress("Processing input...");
+            //the last argument in this case is the path to the attached file
+            // normally args[6] would not be in the constructor
             GMail androidEmail = new GMail(args[0].toString(), args[1].toString(), (List)args[2], args[3].toString(), args[4].toString(), (Context)args[5], (String)args[6]);
-//            publishProgress("Preparing mail message...");
             androidEmail.createEmailMessage();
-//            publishProgress("Sending email...");
             androidEmail.sendEmail();
-//            publishProgress("Email Sent.");
             Log.i("SendMailTask", "Mail sent");
         }
         catch (Exception e) {
-//            publishProgress(e.getMessage());
-//////////////////            System.out.println(e.getMessage());
             e.printStackTrace();
         }
         return null;
